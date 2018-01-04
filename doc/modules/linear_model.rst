@@ -148,7 +148,7 @@ as GridSearchCV except that it defaults to Generalized Cross-Validation
 .. topic:: References
 
     * "Notes on Regularized Least Squares", Rifkin & Lippert (`technical report
-      <http://cbcl.mit.edu/projects/cbcl/publications/ps/MIT-CSAIL-TR-2007-025.pdf>`_,
+      <http://cbcl.mit.edu/publications/ps/MIT-CSAIL-TR-2007-025.pdf>`_,
       `course slides
       <http://www.mit.edu/~9.520/spring07/Classes/rlsslides.pdf>`_).
 
@@ -204,11 +204,6 @@ computes the coefficients along the full path of possible values.
       As the Lasso regression yields sparse models, it can
       thus be used to perform feature selection, as detailed in
       :ref:`l1_feature_selection`.
-
-.. note:: **Randomized sparsity**
-
-      For feature selection or sparse recovery, it may be interesting to
-      use :ref:`randomized_l1`.
 
 
 Setting regularization parameter
@@ -544,8 +539,8 @@ This can be done by introducing `uninformative priors
 <https://en.wikipedia.org/wiki/Non-informative_prior#Uninformative_priors>`__
 over the hyper parameters of the model.
 The :math:`\ell_{2}` regularization used in `Ridge Regression`_ is equivalent
-to finding a maximum a-postiori solution under a Gaussian prior over the
-parameters :math:`w` with precision :math:`\lambda^-1`.  Instead of setting
+to finding a maximum a posteriori estimation under a Gaussian prior over the
+parameters :math:`w` with precision :math:`\lambda^{-1}`.  Instead of setting
 `\lambda` manually, it is possible to treat it as a random variable to be
 estimated from the data.
 
@@ -601,7 +596,7 @@ remaining hyperparameters are the parameters of the gamma priors over
 *non-informative*.  The parameters are estimated by maximizing the *marginal
 log likelihood*.
 
-By default :math:`\alpha_1 = \alpha_2 =  \lambda_1 = \lambda_2 = 1.e^{-6}`.
+By default :math:`\alpha_1 = \alpha_2 =  \lambda_1 = \lambda_2 = 10^{-6}`.
 
 
 .. figure:: ../auto_examples/linear_model/images/sphx_glr_plot_bayesian_ridge_001.png
@@ -691,7 +686,7 @@ ARD is also known in the literature as *Sparse Bayesian Learning* and
 
     .. [3] Michael E. Tipping: `Sparse Bayesian Learning and the Relevance Vector Machine <http://www.jmlr.org/papers/volume1/tipping01a/tipping01a.pdf>`_
 
-    .. [4] Tristan Fletcher: `Relevance Vector Machines explained <http://www.tristanfletcher.co.uk/RVM%20Explained.pdf>`_
+    .. [4] Tristan Fletcher: `Relevance Vector Machines explained <http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.651.8603&rep=rep1&type=pdf>`_
 
 
 
@@ -718,7 +713,10 @@ minimizes the following cost function:
 Similarly, L1 regularized logistic regression solves the following
 optimization problem
 
-.. math:: \underset{w, c}{min\,} \|w\|_1 + C \sum_{i=1}^n \log(\exp(- y_i (X_i^T w + c)) + 1) .
+.. math:: \underset{w, c}{min\,} \|w\|_1 + C \sum_{i=1}^n \log(\exp(- y_i (X_i^T w + c)) + 1).
+
+Note that, in this notation, it's assumed that the observation :math:`y_i` takes values in the set
+:math:`{-1, 1}` at trial :math:`i`.
 
 The solvers implemented in the class :class:`LogisticRegression`
 are "liblinear", "newton-cg", "lbfgs", "sag" and "saga":
@@ -1023,7 +1021,7 @@ performance.
  * https://en.wikipedia.org/wiki/RANSAC
  * `"Random Sample Consensus: A Paradigm for Model Fitting with Applications to
    Image Analysis and Automated Cartography"
-   <http://www.cs.columbia.edu/~belhumeur/courses/compPhoto/ransac.pdf>`_
+   <https://www.sri.com/sites/default/files/publications/ransac-publication.pdf>`_
    Martin A. Fischler and Robert C. Bolles - SRI International (1981)
  * `"Performance Evaluation of RANSAC Family"
    <http://www.bmva.org/bmvc/2009/Papers/Paper355/Paper355.pdf>`_
@@ -1146,7 +1144,7 @@ in the following ways.
 
 .. topic:: References:
 
-    .. [#f1] Peter J. Huber, Elvezio M. Ronchetti: Robust Statistics, Concomitant scale estimates, pg 172
+  * Peter J. Huber, Elvezio M. Ronchetti: Robust Statistics, Concomitant scale estimates, pg 172
 
 Also, this estimator is different from the R implementation of Robust Regression
 (http://www.ats.ucla.edu/stat/r/dae/rreg.htm) because the R implementation does a weighted least
@@ -1265,7 +1263,8 @@ This way, we can solve the XOR problem with a linear classifier::
            [1, 0, 1, 0],
            [1, 1, 0, 0],
            [1, 1, 1, 1]])
-    >>> clf = Perceptron(fit_intercept=False, n_iter=10, shuffle=False).fit(X, y)
+    >>> clf = Perceptron(fit_intercept=False, max_iter=10, tol=None,
+    ...                  shuffle=False).fit(X, y)
 
 And the classifier "predictions" are perfect::
 
